@@ -262,12 +262,14 @@ netannounce(int domain, int proto, const char *local, int port)
         return -1;
     }
     opt = 1;
-    if(setsockopt(s, IPPROTO_TCP, 38, &opt, sizeof(opt)) < 0){
-        saved_errno = errno;
-    close(s);
-    freeaddrinfo(res);
-    errno = saved_errno;
-    return -1;
+    if(perc_enabled){
+        if(setsockopt(s, IPPROTO_TCP, 38, &opt, sizeof(opt)) < 0){
+            saved_errno = errno;
+        close(s);
+        freeaddrinfo(res);
+        errno = saved_errno;
+        return -1;
+        }
     }
     opt = 1;
     if (setsockopt(s, SOL_SOCKET, SO_REUSEADDR, 
